@@ -8,7 +8,7 @@ setup(
     name='pluginbase',
     author='Armin Ronacher',
     author_email='armin.ronacher@active-4.com',
-    version='0.3',
+    version='0.4',
     url='http://github.com/mitsuhiko/pluginbase',
     py_modules=['pluginbase'],
     description='A support library for building plugins sytems in Python.',
@@ -16,6 +16,14 @@ setup(
     classifiers=[
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-    ],
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: Implementation :: PyPy',
+        'Environment :: Plugins',
+        'Intended Audience :: Developers',
+    ]
 )

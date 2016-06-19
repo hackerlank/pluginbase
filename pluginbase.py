@@ -32,6 +32,7 @@ else:
     from io import BytesIO as NativeBytesIO
 
 
+__version__ = '0.4'
 _local = threading.local()
 
 _internalspace = ModuleType(__name__ + '._internalspace')
@@ -292,7 +293,7 @@ class PluginSource(object):
                 return open(os.path.join(os.path.dirname(fn), filename), 'rb')
         buf = pkgutil.get_data(self.mod.__name__ + '.' + plugin, filename)
         if buf is None:
-            raise IOError(errno.ENOEXITS, 'Could not find resource')
+            raise IOError(errno.ENOENT, 'Could not find resource')
         return NativeBytesIO(buf)
 
     def cleanup(self):
@@ -316,7 +317,9 @@ class PluginSource(object):
         except AttributeError:
             pass
         prefix = modname + '.'
-        _sys.modules.pop(modname)
+        # avoid the bug described in issue #6
+        if modname in _sys.modules:
+            del _sys.modules[modname]
         for key, value in list(_sys.modules.items()):
             if not key.startswith(prefix):
                 continue
@@ -388,7 +391,10 @@ class _ImportHook(ModuleType):
         self.enabled = False
 
     def plugin_import(self, name, globals=None, locals=None,
-                      fromlist=None, level=0):
+                      fromlist=None, level=None):
+        if level is None:
+            # set the level to the default value specific to this python version
+            level = -1 if PY2 else 0
         import_name = name
         if self.enabled:
             ref_globals = globals
